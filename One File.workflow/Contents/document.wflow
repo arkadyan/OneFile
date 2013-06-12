@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>346</string>
+	<key>AMApplicationVersion</key>
+	<string>2.3</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMActionVersion</key>
+				<string>1.1.1</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Safari</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict/>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.url</string>
+					</array>
+				</dict>
+				<key>AMRequiredResources</key>
+				<array/>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Get Current Webpage from Safari.action</string>
+				<key>ActionName</key>
+				<string>Get Current Webpage from Safari</string>
+				<key>ActionParameters</key>
+				<dict/>
+				<key>BundleIdentifier</key>
+				<string>com.apple.GetURLofFrontSafariWindow</string>
+				<key>CFBundleVersion</key>
+				<string>1.1.1</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<true/>
+				<key>CanShowWhenRun</key>
+				<false/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryInternet</string>
+				</array>
+				<key>Class Name</key>
+				<string>AMGetURLofSafariWindowAction</string>
+				<key>Keywords</key>
+				<array>
+					<string>Web</string>
+					<string>Get</string>
+					<string>URL</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>C338A032-1C9F-4711-AE06-5722D934A354</string>
+				<key>UUID</key>
+				<string>66E58848-657A-4E7F-A7D4-7AAA98D7436E</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Safari</string>
+				</array>
+				<key>arguments</key>
+				<dict/>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Get Current Webpage from Safari.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#!/usr/bin/env ruby -wKU
+
+require 'net/http'
+require 'net/https'
+require 'uri'
+
+
+
+def get(url)
+  url = URI.parse(url) if url.is_a? String
+  
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true if url.scheme == 'https'
+
+  request = Net::HTTP::Get.new(url.request_uri)
+  response = http.request(request)
+  response.body
+end
+
+def embed_css_inline(html)
+  # TODO: Handle relative URLs
+  css_regex = /
+    &lt;link           # Open the link element opening or self-contained tag
+    \s+             # White space between element name and attributes
+    .*              # Optional other attributes
+    href=           # href attribute where we find the URL
+    ["']            # Opening attribute quotes
+    (               # Capture the URL for downloading
+    https?:\/\/     # http or https
+    .+              # Rest of the URL
+    \.css           # URL must end with .css
+    )               # Finish capturing the URL
+    ["']            # Closing attribute quotes
+    .*              # Optional other attributes
+    \/?             # Optional inline close to the link tag
+    &gt;               # End the link element opening or self-contained tag
+    (&lt;\/link&gt;)?     # Optional closing link tag
+  /x
+
+  html.gsub!(css_regex) do
+    css_url = $1
+    css_content = get(css_url)
+    # TODO: Replace all images in css rules
+
+    styles_code = "&lt;style type='text/css'&gt;\n"
+    styles_code &lt;&lt; css_content
+    styles_code &lt;&lt; "&lt;/style&gt;\n"
+  end
+end
+
+
+
+url = ARGV.shift
+
+unless url and url.match(/^https?:\/\//)
+  raise ArgumentError, 'A valid URL is required.'
+end
+
+html = get url
+
+embed_css_inline html
+
+# TODO: Embed javascript files inline
+
+# TODO: Embed images inline with base64 encoding
+
+puts html
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>1</integer>
+					<key>shell</key>
+					<string>/usr/bin/ruby</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>D414A84E-1178-45F0-A4D7-02993DA63BE1</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>49E38C64-0259-41DC-83B2-F8D2047A6BE8</string>
+				<key>UUID</key>
+				<string>A405FBEB-4F63-4A88-AFF9-778B52BF3778</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>400.000000:330.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict>
+		<key>DB800579-DBF4-491E-A8C5-D00B6BF882E2</key>
+		<dict>
+			<key>from</key>
+			<string>66E58848-657A-4E7F-A7D4-7AAA98D7436E - 66E58848-657A-4E7F-A7D4-7AAA98D7436E</string>
+			<key>to</key>
+			<string>A405FBEB-4F63-4A88-AFF9-778B52BF3778 - A405FBEB-4F63-4A88-AFF9-778B52BF3778</string>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<array>
+		<dict>
+			<key>UUID</key>
+			<string>6242D438-2784-40F3-9AD6-C6ADE484C4DE</string>
+			<key>identifier</key>
+			<string>com.apple.Automator.Variable.Path</string>
+			<key>name</key>
+			<string>Path</string>
+			<key>value</key>
+			<string>~/Desktop</string>
+		</dict>
+	</array>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>serviceApplicationBundleID</key>
+		<string>com.apple.Safari</string>
+		<key>serviceApplicationPath</key>
+		<string>/Applications/Safari.app</string>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
