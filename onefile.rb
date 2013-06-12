@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby -wKU
 
 require 'net/http'
+require 'net/https'
 require 'uri'
 
 
