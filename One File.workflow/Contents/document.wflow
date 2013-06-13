@@ -349,7 +349,7 @@ puts html
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on write_to_file(this_data, target_file) -- (string, file reference)	try		open for access target_file with write permission		write this_data to the target_file as "utf8"		close access the target_file		return true	on error		try			close access file target_file		end try		return false	end tryend write_to_fileon run {input, parameters}	set file_ref to ¬		choose file name with prompt "Choose a name and location for the One HTML File" default name "onefile.html"		open for access file_ref -- creates file	close access file_ref		set html_string to input as string	my write_to_file(html_string, file_ref)		return POSIX path of file file_refend run</string>
+					<string>to joinList(aList, delimiter)	set retVal to ""	set prevDelimiter to AppleScript's text item delimiters	set AppleScript's text item delimiters to delimiter	set retVal to aList as string	set AppleScript's text item delimiters to prevDelimiter	return retValend joinListon write_to_file(this_data, target_file) -- (string, file reference)	try		open for access target_file with write permission		write this_data to the target_file as "utf8"		close access the target_file		return true	on error		try			close access file target_file		end try		return false	end tryend write_to_fileon run {input, parameters}	set file_ref to ¬		choose file name with prompt "Choose a name and location for the One HTML File" default name "onefile.html"		open for access file_ref -- creates file	close access file_ref		set html_string to my joinList(input, "\n")	my write_to_file(html_string, file_ref)		return POSIX path of file file_refend run</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -413,14 +413,14 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>2E762066-DDE7-43BD-9E9B-8C381CAF0AE2</key>
+		<key>CD702DC7-A7F6-46B4-BFCC-AAE90009E125</key>
 		<dict>
 			<key>from</key>
 			<string>A405FBEB-4F63-4A88-AFF9-778B52BF3778 - A405FBEB-4F63-4A88-AFF9-778B52BF3778</string>
 			<key>to</key>
 			<string>3454E524-C674-49A5-A4E3-8874ED902AEF - 3454E524-C674-49A5-A4E3-8874ED902AEF</string>
 		</dict>
-		<key>D7DFAC0D-6610-4029-83D8-194B9FA73DD2</key>
+		<key>EE214C4B-05D8-44F0-A148-8DABB202291D</key>
 		<dict>
 			<key>from</key>
 			<string>66E58848-657A-4E7F-A7D4-7AAA98D7436E - 66E58848-657A-4E7F-A7D4-7AAA98D7436E</string>
