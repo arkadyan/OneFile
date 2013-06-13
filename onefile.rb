@@ -35,7 +35,7 @@ def embed_css_inline(html)
     \/?             # Optional inline close to the link tag
     >               # End the link element opening or self-contained tag
     (<\/link>)?     # Optional closing link tag
-  /x
+  /ix               # Ignore case, ignore whitespace and comments
 
   html.gsub!(css_regex) do
     css_url = $1
