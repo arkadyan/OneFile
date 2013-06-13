@@ -131,7 +131,7 @@ require 'uri'
 
 def get(url)
   url = URI.parse(url) if url.is_a? String
-  
+
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true if url.scheme == 'https'
 
@@ -158,7 +158,7 @@ def embed_css_inline(html)
     \/?             # Optional inline close to the link tag
     &gt;               # End the link element opening or self-contained tag
     (&lt;\/link&gt;)?     # Optional closing link tag
-  /x
+  /ix               # Ignore case, ignore whitespace and comments
 
   html.gsub!(css_regex) do
     css_url = $1
@@ -301,9 +301,111 @@ puts html
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>400.000000:330.000000</string>
+				<string>400.000000:696.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on write_to_file(this_data, target_file) -- (string, file reference)	try		open for access target_file with write permission		write this_data to the target_file		close access the target_file		return true	on error		try			close access file target_file		end try		return false	end tryend write_to_fileon run {input, parameters}	set file_ref to ¬		choose file name with prompt "Choose a name and location for the One HTML File" default name "onefile.html"		open for access file_ref -- creates file	close access file_ref		set html_string to input as string	my write_to_file(html_string, file_ref)		return file_pathend run</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>3539EEA5-66EA-472C-9E80-F23CACE719E0</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>AD89D89B-DEAF-4A13-9BB3-F8D18D1DD3C6</string>
+				<key>UUID</key>
+				<string>3454E524-C674-49A5-A4E3-8874ED902AEF</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>400.000000:513.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
 			<key>isViewVisible</key>
 			<true/>
@@ -311,7 +413,14 @@ puts html
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>DB800579-DBF4-491E-A8C5-D00B6BF882E2</key>
+		<key>2E762066-DDE7-43BD-9E9B-8C381CAF0AE2</key>
+		<dict>
+			<key>from</key>
+			<string>A405FBEB-4F63-4A88-AFF9-778B52BF3778 - A405FBEB-4F63-4A88-AFF9-778B52BF3778</string>
+			<key>to</key>
+			<string>3454E524-C674-49A5-A4E3-8874ED902AEF - 3454E524-C674-49A5-A4E3-8874ED902AEF</string>
+		</dict>
+		<key>D7DFAC0D-6610-4029-83D8-194B9FA73DD2</key>
 		<dict>
 			<key>from</key>
 			<string>66E58848-657A-4E7F-A7D4-7AAA98D7436E - 66E58848-657A-4E7F-A7D4-7AAA98D7436E</string>
